@@ -1,0 +1,77 @@
+{% extends "cliente/perfilcliente.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5 text-center">
+    <div class="d-flex justify-content-center align-items-center flex-column mb-4">
+        <h3 class="mb-3" style="background-color: #007BFF; color: white; padding: 10px;"><b>Catálogo de Productos</b></h3>
+    </div>
+    {% for categoria, productos in categorias_productos.items %}
+        <div class="categoria-container">
+            <h4 class="categoria-titulo">{{ categoria }}</h4>
+            <div class="row">
+                {% for producto in productos %}
+                    <div class="col-lg-3 col-md-4 mb-4">
+                        <div class="card producto-card">
+                            {% if producto.imagen %}
+                                <div class="product-image">
+                                    <img src="{{ producto.imagen.url }}" class="card-img-top" alt="Imagen del producto">
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ producto.nombre }}</h5>
+                                <p class="card-text"><pre>{{ producto.descripcion }}</pre></p>
+                                <p class="card-text"><strong>Precio: ${{ producto.precio }}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<style>
+    .categoria-titulo {
+        color: #007BFF;
+        font-weight: bold;
+        font-size: 24px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .categoria-container {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .producto-card {
+        transition: transform 0.3s;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .producto-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .product-image {
+        text-align: center;
+    }
+
+    .card-img-top {
+        max-height: 150px;
+        object-fit: contain;
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .card-text pre {
+        white-space: pre-wrap;
+    }
+</style>
+{% endblock %}

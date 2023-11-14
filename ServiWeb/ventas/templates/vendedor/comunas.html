@@ -1,0 +1,240 @@
+{% extends "vendedor/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'index/css/b4.css' %}">
+<script src="{% static 'index/js/b4.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div id="AgregarComunaModal" class="modal" style="overflow: scroll;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-dark">Agregar nueva comuna</h5>
+            </div>
+            <div class="modal-body bg-dark text-white">
+                <form method="POST" action="{% url 'AddComuna' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_nombre">Nombre:</label>
+                        <input type="text" class="form-control" id="id_nombre" name="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_precio_envio">Precio de Envío:</label>
+                        <input type="number" class="form-control" id="id_precio_envio" name="precio_envio">
+                    </div>
+                    <button type="submit" class="btn btn-success">Agregar</button>
+                </form>
+            </div>
+            <div class="modal-footer bg-dark">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="EditarComunaModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-dark">Editar Comuna</h5>
+            </div>
+            <div class="modal-body bg-dark text-white">
+                <form method="POST" action="javascript:void(0)">
+                    {% csrf_token %}
+                    <input type="hidden" id="id_comuna_editar" name="id_comuna">
+                    <div class="form-group">
+                        <label for="nombre_comuna_editar">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre_comuna_editar" name="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="precio_envio_editar">Precio de Envío:</label>
+                        <input type="number" class="form-control" id="precio_envio_editar" name="precio_envio">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-dark text-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-success" onclick="guardarEdicionComuna()">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center">Información de Comunas <i class="fas fa-map-marker-alt"></i></h3>
+        <div class="col-md-3 pb-2">
+            <a href="#AgregarComunaModal"
+                data-toggle="modal" data-dismiss="modal">
+                <button type="button" class="btn btn-success">
+                    Agregar Comuna
+                    <i class="fas fa-plus-circle"></i>
+                </button>
+            </a>
+        </div>
+            <div class="card card-body" style="overflow:scroll">
+                <table class="table table-hover table-primary" id="myTable">
+                <thead>
+                    <tr>
+                        <th>ID Comuna</th>
+                        <th>Nombre</th>
+                        <th>Precio envío</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for comuna in comunas %}
+                    <tr data-id="{{ comuna.id }}">
+                        <td class="texto-ajustado">{{ comuna.id }}</td>
+                        <td class="texto-ajustado">{{ comuna.nombre }}</td>
+                        <td class="texto-ajustado">{{ comuna.precio_envio }}</td>
+                        <td>
+                            <button class="btn btn-dark-outline btn-sm" onclick="editarComuna('{{ comuna.id }}')">
+                                 <img src="{% static 'index/img/editar.png' %}" alt="Error"
+                                width="30">
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    function eliminarComuna(id) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción eliminará la comuna. ¿Deseas continuar?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/eliminar_comuna/',
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'id_comuna': id
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Comuna eliminada',
+                            text: 'La comuna se ha eliminado correctamente.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        // Recargar la página
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Hubo un error al eliminar la comuna. Por favor, inténtalo de nuevo.',
+                        });
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un error al eliminar la comuna. Por favor, inténtalo de nuevo.',
+                    });
+                }
+            });
+        }
+    });
+}
+
+</script>
+
+<script>
+    function editarComuna(id, nombre, precio_envio) {
+
+        $('#id_comuna_editar').val(id);
+        $('#nombre_comuna_editar').val(nombre);
+        $('#precio_envio_editar').val(precio_envio);
+
+        $('#EditarComunaModal').modal('show');
+    }
+
+    function guardarEdicionComuna() {
+    const id = $('#id_comuna_editar').val();
+    const nombre = $('#nombre_comuna_editar').val();
+    const precio_envio = $('#precio_envio_editar').val();
+
+    $.ajax({
+        url: '/editar_comuna/',
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            'id_comuna': id,
+            'nombre': nombre,
+            'precio_envio': precio_envio
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Comuna actualizada',
+                    text: 'La comuna se ha actualizado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                actualizarPagina();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al actualizar la comuna. Por favor, inténtalo de nuevo.',
+                });
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al actualizar la comuna. Por favor, inténtalo de nuevo.',
+            });
+        }
+    });
+
+    $('#EditarComunaModal').modal('hide');
+}
+    
+</script>
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error...',
+        text: "{{ message }}",
+    });
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

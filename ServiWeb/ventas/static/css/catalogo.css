@@ -1,0 +1,64 @@
+/* Estilos para el encabezado */
+h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-top: 20px;
+}
+
+/* Estilos para cada categoría */
+.categoria {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.categoria h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Estilos para cada producto */
+.producto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.producto img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.producto h3 {
+    font-size: 20px;
+    margin-top: 10px;
+    color: #333;
+}
+
+.producto p {
+    font-size: 16px;
+    color: #777;
+    margin: 5px 0;
+}
+
+.boton-arrendar {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.boton-arrendar:hover {
+    background-color: #0056b3;
+}

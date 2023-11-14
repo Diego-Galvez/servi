@@ -1,0 +1,142 @@
+{% extends "cliente/perfilcliente.html" %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<style>
+  .profile-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 20px;
+    background-color: #fff; 
+    border-radius: 10px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+  }
+
+  .avatar-container {
+    flex: 1;
+    text-align: center;
+    padding: 10px; 
+  }
+
+  .avatar-image {
+    max-width: 350px;
+    border-radius: 0%;
+  }
+
+  .profile-info {
+    flex: 2;
+    padding: 0 20px;
+    border-left: 1px solid #ddd; 
+  }
+
+  .profile-section-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .profile-details {
+    font-size: 16px;
+  }
+  .profile-details p {
+    border-bottom: 1px solid #ddd; 
+    padding-bottom: 10px; 
+    margin-bottom: 10px; 
+  }
+  .container h1 {
+    background-color: #b3e0ff; 
+    padding: 10px; 
+    margin: 0; 
+    border-radius: 10px;
+  }
+</style>
+
+<br><br><br>
+
+  <div class="container">
+    <h1 class="text-center">Bienvenido a tu Perfil {{ user.first_name }} {{ user.last_name }}</h1>
+    <div class="profile-container">
+      <div class="cliente-container">  
+        <img src="{{ form.imagen.value.url }}" alt="Avatar" class="avatar-image">
+        <div class="text-center">
+          <button class="btn btn-success" onclick="AbrirModal()">Editar perfil</button>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-section-title"><b>Datos de Cliente</b></h2>
+        <div class="profile-details">
+          <p><strong><b>Usuario:</b></strong> {{ user.username }}</p>
+          <p><strong><b>Nombre completo:</b></strong> {{ user.first_name }} {{ user.last_name }}</p>
+          <p><strong><b>RUT:</b></strong> {{ form.rut.value }}</p>
+          <p><strong><b>Correo:</b></strong> {{ user.email }}</p>
+          <p><strong><b>Teléfono de contacto:</b></strong> {{ form.telefono_contacto.value }}</p>
+          <p><strong><b>Empresa:</b></strong> {{ form.empresa.value }}</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <div id="modalEditarPerfil" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="CerrarModal()">&times;</span>
+        <h2>Editar Perfil</h2>
+        <form id="formularioEditarPerfil" method="post" action="{% url 'perfilcliente' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p><strong>Usuario:</strong> {{ user.username }}</p>
+            <p><strong>Nombre completo:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <input type="text" name="rut" value="{{ form.rut.value }}" placeholder="Ingresa tu Rut">
+            <p><strong>Correo:</strong> {{ user.email }}</p>
+            <input type="text" name="telefono_contacto" value="{{ form.telefono_contacto.value }}" placeholder="Ingresa tu Teléfono">
+            <input type="text" name="empresa" value="{{ form.empresa.value }}" placeholder="Ingresa tu Empresa">
+            <h5>Imagen de perfil</h5>
+            <input type="file" name="perfilimg" id="perfilimg">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+
+<style>
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 600px; 
+    max-height: 500%; 
+    margin-top: 300px; 
+    
+  }
+
+</style>
+
+<script>
+    function AbrirModal() {
+        var modal = document.getElementById("modalEditarPerfil");
+        modal.style.display = "block";
+    }
+
+    function CerrarModal() {
+        var modal = document.getElementById("modalEditarPerfil");
+        modal.style.display = "none";
+    }
+</script>
+  
+  {% if messages %}
+    {% for message in messages %}
+      <script>
+          Swal.fire({
+              icon: 'error',
+              title: 'Error...',
+              text: "{{message}}",
+          })
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
+

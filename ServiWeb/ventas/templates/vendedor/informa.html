@@ -1,0 +1,151 @@
+{% extends "vendedor/base.html" %}
+{% load static %}
+{% block content %}
+<body>
+    <style>
+        .container {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding: 20px;
+    }
+    
+    .container > div {
+        text-align: center;
+        max-width: 300px;
+    }
+    
+    .container img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .logo-container {
+        display: flex;
+        align-items: center; 
+        background-color: #262491; 
+        padding: 10px; 
+        width: 100%; 
+    }
+
+    .logo-container img {
+        max-width: 100%;
+        height: auto;
+        margin-right: 10px; 
+    }
+
+    .logo-container h1 {
+    font-size: 24px; 
+    color: #ffffff; 
+    margin: 0; 
+}
+
+.logo-container h2 {
+    font-size: 16px; 
+    color: #ffffff;
+    margin: 0; 
+}
+
+    </style>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'imagenes/logo.png' %}" alt="Logo de la Empresa" width="200px">
+            <h1>Somos Servirent Ltda: Nos preocupamos de nuestros clientes para poder darles la mejor atención con las mejores herramientas del mercado.</h1>
+        </div>
+    </header>
+    <br><br><br>
+    <section class="container">
+        <div class="mission">
+            <img src="{% static 'imagenes/mision.png' %}" alt="Imagen de Misión">
+            <h1>Misión</h1>
+            <p>Lo que nos mueve, propósito o razón de ser de nuestra empresa.</p>
+            <p>"Dar lo mejor de nosotros para entregar soluciones a nuestros clientes, innovando y desarrollando una compañía de arriendo sostenible".</p>
+        </div>
+        <div class="vision">
+            <img src="{% static 'imagenes/vision.png' %}" alt="Imagen de Visión">
+            <h1>Visión</h1>
+            <p>Hacia dónde nos dirigimos en el largo plazo.</p>
+            <p>"Ser reconocida como la mejor empresa de Arriendo de equipos y maquinarias en Latinoamérica".</p>
+        </div>
+        <div class="values">
+            <img src="{% static 'imagenes/valores.png' %}" alt="Imagen de Valores">
+            <h1>Valores</h1>
+            <p>Respetamos a todas las personas, comunidades y entidades que se relacionan con nuestro negocio, y declaramos como valores:</p>
+            <ul>
+                <li>Integridad</li>
+                <li>Respeto</li>
+                <li>Excelencia</li>
+            </ul>
+        </div>
+    </section>
+</body>
+<br><br>
+
+<footer>
+    <style>
+.logo-footer {
+max-width: 200px;
+height: auto;
+}
+footer {
+background-color: #333;
+color: #fff;
+padding: 20px 0;
+text-align: center;
+}
+
+.footer-container {
+display: flex;
+justify-content: space-around;
+}
+
+.footer-section {
+flex: 1;
+padding: 10px;
+}
+
+.footer-section h3 {
+font-size: 18px; 
+margin-bottom: 10px; 
+}
+
+.footer-section p {
+font-size: 14px; 
+margin: 0; 
+}
+
+.footer-section a {
+color: #fff; 
+text-decoration: none; 
+}
+    </style>
+    <div class="footer-container">
+        <div class="footer-section">
+            <img src="{% static 'imagenes/logomini.png' %}" alt="Logo de Servirent" class="logo-footer">
+        </div>
+        <div class="footer-section">
+            <h3>📍 DIRECCIÓN</h3>
+            <p>Sargento Aldea 0181</p>
+            <p>La Granja, Santiago de Chile</p>
+            <p>CP: 8790730</p>
+        </div>
+        <div class="footer-section">
+            <h3>📞 Teléfonos</h3>
+            <p>+56 9 4918 6869</p>
+            <p>+56 9 7832 1332</p>
+            <p>+56 2 2546 7887</p>
+        </div>
+        <div class="footer-section">
+            <h3>⏰ HORARIOS DE ATENCIÓN</h3>
+            <p>Lunes a Viernes</p>
+            <p>08:00 Hrs. – 13:00 Hrs.</p>
+            <p>14:00 Hrs. – 18:00 Hrs.</p>
+        </div>
+        <div class="footer-section">
+            <h3>✉️ Correo Electrónico</h3>
+            <p><a href="mailto:arriendos@servirent.cl">arriendos@servirent.cl</a></p>
+        </div>
+    </div>
+</footer>
+</html>
+{% endblock %}

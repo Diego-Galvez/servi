@@ -1,0 +1,129 @@
+{% extends "cliente/perfilcliente.html" %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'index/css/b4.css' %}">
+<script src="{% static 'index/js/b4.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center">Información de Arriendos Pendientes  <i class="fas fa-clock text-warning"></i></h3>
+        <div class="col-md-3 pb-2">
+        </div>
+        <div class="card card-body" style="overflow:scroll">
+            <table class="table table-hover table-primary" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Comprobante</th>
+                        <th>Pedido</th>
+                        <th>Usuario</th>
+                        <th>Cliente</th>
+                        <th>Rut</th>
+                        <th>Fecha</th>
+                        <th>Modo Entrega</th>
+                        <th>Comuna</th>
+                        <th>Precio Envío</th>
+                        <th>Dirección</th>
+                        <th>Herramienta</th>
+                        <th>Cantidad días</th>
+                        <th>SubTotal</th>
+                        <th>Total Arriendo</th>
+                        <th>Cancelar Pedido</th>
+                        <th>Estado</th>
+                        
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for ventas_arriendos in ventas_arriendos %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'descargar_pdf' ventas_arriendos.id %}" class="btn btn-primary">
+                                PDF
+                            </a>
+                        </td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.id }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.user }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.nombre_cliente }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.rut }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.fecha }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.modoentrega }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.comuna }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.precio_envio }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.comentarios }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.nombre_herramienta }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.cantidad }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.subtotal }}</td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.total }}</td>
+                        <td>
+                            <select class="form-control" id="estadoSelect-{{ ventas_arriendos.id }}" onchange="cancelarPedido('{{ ventas_arriendos.id }}', this.value)" {% if ventas_arriendos.pedido == "Si" %} disabled {% endif %}>
+                                <option value="No" {% if ventas_arriendos.pedido == "No" %} selected {% endif %}>No</option>
+                                <option value="Si" {% if ventas_arriendos.pedido == "Si" %} selected {% endif %}>Si</option>
+                            </select>
+                        </td>
+                        <td class="texto-ajustado">{{ ventas_arriendos.estado }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cancelarPedido(id, estado) {
+        
+    $.ajax({
+        url: '/actualizar_pedido/', 
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            'id_pedido': id,
+            'estado_pedido': estado
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pedido cancelado',
+                    text: 'El estado del pedido se ha actualizado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                window.location.reload();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al actualizar el estado del pedido. Por favor, inténtalo de nuevo.',
+                });
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al actualizar el estado del pedido. Por favor, inténtalo de nuevo.',
+            });
+        }
+    });
+}
+</script>
+
+  
+{% if messages %}
+{% for message in messages %}
+  <script>
+      Swal.fire({
+          icon: 'error',
+          title: 'Error...',
+          text: "{{message}}",
+      })
+  </script>
+{% endfor %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "vendedor/base.html" %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'index/css/b4.css' %}">
+<script src="{% static 'index/js/b4.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center">Información de Arriendos Pendientes  <i class="fas fa-clock text-warning"></i></h3>
+        <div class="card card-body" style="overflow:scroll">
+            <table class="table table-hover table-primary" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Comprobante</th>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Modo Entrega</th>
+                        <th>Comuna</th>
+                        <th>Precio Envío</th>
+                        <th>Dirección</th>
+                        <th>Herramienta</th>
+                        <th>Cantidad días</th>
+                        <th>SubTotal</th>
+                        <th>Total Arriendo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for venta_arriendo in ventas_arriendos %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'generar_pdf_vendedor' venta_arriendo.id %}" class="btn btn-primary">
+                                PDF
+                            </a>
+                        </td>
+                        <td class="texto-ajustado">{{ venta_arriendo.id }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.cliente }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.fecha }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.modoentrega }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.comuna }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.precio_envio }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.comentarios }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.nombre_herramienta }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.cantidad }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.subtotal }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.total }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.estado }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error...',
+        text: "{{message}}",
+    })
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

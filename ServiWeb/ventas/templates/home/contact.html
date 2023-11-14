@@ -1,0 +1,67 @@
+{% extends "home/home.html" %}
+{% load static %}
+{% block content %}
+
+<div id="message-container"></div>
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+<form id="contactForm" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <label for="{{ form.telefono_contacto.id_for_label }}"></label>
+    
+    <button type="submit">Enviar</button>
+</form>
+<style>
+    #contactForm {
+  margin-top: 20px; 
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff; 
+}
+
+#message-container {
+  margin-top: 20px; 
+}
+</style>
+<script>
+    $(document).ready(function() {
+        $('#contactForm').submit(function(event) {
+            event.preventDefault();
+
+            const nombre = $('#id_nombre').val();
+            const email = $('#id_email').val();
+            const mensaje = $('#id_mensaje').val();
+
+            $('#message-container').empty();
+
+            if (!nombre) {
+                $('#message-container').append('<div class="alert alert-danger" role="alert">El campo "Nombre" es obligatorio.</div>');
+            }
+            if (!email) {
+                $('#message-container').append('<div class="alert alert-danger" role="alert">El campo "Correo electrónico" es obligatorio.</div>');
+            }
+            if (!mensaje) {
+                $('#message-container').append('<div class="alert alert-danger" role="alert">El campo "Mensaje" es obligatorio.</div>');
+            }
+
+            if (nombre && email && mensaje) {
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#message-container').append('<div class="alert alert-success" role="alert">Mensaje enviado correctamente, en breve nuestro vendedor te contactara.</div>');
+                        $('#contactForm')[0].reset();
+                    },
+                    error: function(error) {
+                        $('#message-container').append('<div class="alert alert-danger" role="alert">Error al enviar el mensaje. Por favor, inténtelo de nuevo más tarde.</div>');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<br><br><br>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "vendedor/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'index/css/b4.css' %}">
+<script src="{% static 'index/js/b4.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center">Sección de contactos externos   <i class="fa-solid fa-address-card"></i></i></h3>
+        <div class="col-md-3 pb-2">
+        </div>
+        <div class="card card-body" style="overflow:scroll">
+            <table class="table table-hover table-primary" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Mensaje</th>
+                        <th>Teléfono de Contacto</th>
+                        <th>Comentarios</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contacto in contactos %}
+                    <tr>
+                        <td>{{ contacto.nombre }}</td>
+                        <td>{{ contacto.email }}</td>
+                        <td>{{ contacto.mensaje }}</td>
+                        <td>{{ contacto.telefono_contacto }}</td>
+                        <td>
+                            <textarea class="form-control" rows="3" placeholder="Escribe observaciones del contacto" onchange="guardarComentarios('{{ contacto.id }}', this.value)">{{ contacto.comentarios }}</textarea>
+                        </td>
+                        <td>
+                            <select class="form-control" onchange="cambiarEstadoContacto('{{ contacto.id }}', this.value)">
+                                <option value="Pendiente" {% if contacto.estado == "Pendiente" %} selected {% endif %}>Pendiente</option>
+                                <option value="Contactado" {% if contacto.estado == "Contactado" %} selected {% endif %}>Contactado</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function cambiarEstadoContacto(id, estado) {
+    $.ajax({
+        url: '/cambiar_estado_contacto/',
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            'id_contacto': id,
+            'estado': estado
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Estado actualizado',
+                    text: 'El estado del contacto se ha actualizado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al actualizar el estado del contacto. Por favor, inténtalo de nuevo.',
+                });
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al actualizar el estado del contacto. Por favor, inténtalo de nuevo.',
+            });
+        }
+    });
+}
+</script>
+
+<script>
+    function guardarComentarios(id, comentarios) {
+    $.ajax({
+        url: '/guardar_comentarios/',
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            'id_contacto': id,
+            'comentarios': comentarios
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Comentarios guardados',
+                    text: 'Los comentarios se han guardado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                // Actualiza el campo de comentarios en el HTML
+                const campoComentarios = document.querySelector(`textarea[onchange="guardarComentarios('{{ contacto.id }}', this.value)"]`);
+                if (campoComentarios) {
+                    campoComentarios.value = comentarios;
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al guardar los comentarios. Por favor, inténtalo de nuevo.',
+                });
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al guardar los comentarios. Por favor, inténtalo de nuevo.',
+            });
+        }
+    });
+}
+</script>
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error...',
+        text: "{{message}}",
+    })
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

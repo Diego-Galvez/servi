@@ -1,0 +1,82 @@
+{% extends "vendedor/base.html" %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'index/css/b4.css' %}">
+<script src="{% static 'index/js/b4.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center">Información de Arriendos Pendientes <i class="fas fa-clock text-warning"></i></h3>
+        <div class="card card-body" style="overflow:scroll">
+            <table class="table table-hover table-primary" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Comprobante</th>
+                        <th>Pedido</th>
+                        <th>Usuario</th>
+                        <th>Cliente</th>
+                        <th>Rut Cliente</th>
+                        <th>Fecha</th>
+                        <th>Modo Entrega</th>
+                        <th>Comuna</th>
+                        <th>Precio Envío</th>
+                        <th>Dirección</th>
+                        <th>Herramienta</th>
+                        <th>Cantidad días</th>
+                        <th>SubTotal</th>
+                        <th>Total Arriendo</th>
+                        <th>Pedido Cancelado</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for arriendo in arriendos %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'generar_pdf' arriendo.id %}" class="btn btn-primary">
+                                PDF
+                            </a>
+                        </td>
+                        <td class="texto-ajustado">{{ arriendo.id }}</td>
+                        <td class="texto-ajustado">{{ arriendo.user }}</td>
+                        <td class="texto-ajustado">{{ arriendo.nombre_cliente }}</td>
+                        <td class="texto-ajustado">{{ arriendo.rut }}</td>
+                        <td class="texto-ajustado">{{ arriendo.fecha }}</td>
+                        <td class="texto-ajustado">{{ arriendo.modoentrega }}</td>
+                        <td class="texto-ajustado">{{ arriendo.comuna }}</td>
+                        <td class="texto-ajustado">{{ arriendo.precio_envio }}</td>
+                        <td class="texto-ajustado">{{ arriendo.comentarios }}</td>
+                        <td class="texto-ajustado">{{ arriendo.nombre_herramienta }}</td>
+                        <td class="texto-ajustado">{{ arriendo.cantidad }}</td>
+                        <td class="texto-ajustado">{{ arriendo.subtotal }}</td>
+                        <td class="texto-ajustado">{{ arriendo.total }}</td>
+                        <td class="texto-ajustado">{{ arriendo.pedido }}</td>
+                        <td class="texto-ajustado">{{ arriendo.estado }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+  
+{% if messages %}
+{% for message in messages %}
+  <script>
+      Swal.fire({
+          icon: 'error',
+          title: 'Error...',
+          text: "{{message}}",
+      })
+  </script>
+{% endfor %}
+{% endif %}
+{% endblock %}

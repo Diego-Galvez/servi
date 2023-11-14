@@ -1,0 +1,127 @@
+{% extends "vendedor/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'index/css/b4.css' %}">
+<script src="{% static 'index/js/b4.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div>
+    <div class="col-md-12">
+        <div class="col-md-3 pb-2">
+            <a href="{% url 'AddVenta' %}">
+                <button type="button" class="btn btn-success">
+                    Agregar Nuevo Arriendo
+                    <i class="fas fa-plus-circle"></i>
+                </button>
+            </a>
+        </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center">Información de Arriendos   <i class="fa-sharp fa-solid fa-truck-moving"></i></h3>
+        <div class="col-md-3 pb-2">
+        </div>
+        <div class="card card-body" style="overflow:scroll">
+            <table class="table table-hover table-primary" id="myTable">
+                <thead>
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Modo Entrega</th>
+                        <th>Comuna</th>
+                        <th>Precio Envío</th>
+                        <th>Dirección</th>
+                        <th>Herramienta</th>
+                        <th>Cantidad</th>
+                        <th>SubTotal</th>
+                        <th>Total Arriendo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for venta_arriendo in ventas_arriendos %}
+                    <tr>
+                        <td class="texto-ajustado">{{ venta_arriendo.id }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.cliente }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.fecha }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.modoentrega }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.comuna }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.precio_envio }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.comentarios }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.nombre_herramienta }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.cantidad }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.subtotal }}</td>
+                        <td class="texto-ajustado">{{ venta_arriendo.total }}</td>
+                        <td>
+                            <select class="form-control" onchange="cambiarEstado('{{ venta_arriendo.id }}', this.value)">
+                                <option value="Pendiente" {% if venta_arriendo.estado == "Pendiente" %} selected {% endif %}>Pendiente</option>
+                                <option value="Realizado" {% if venta_arriendo.estado == "Realizado" %} selected {% endif %}>Realizado</option>
+                                <option value="Cancelado" {% if venta_arriendo.estado == "Cancelado" %} selected {% endif %}>Cancelado</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function cambiarEstado(id, estado) {
+    $.ajax({
+        url: '/cambiar_estado_arriendo/',
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            'id_arriendo': id,
+            'estado': estado
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Estado actualizado',
+                    text: 'El estado del arriendo se ha actualizado correctamente.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al actualizar el estado del arriendo. Por favor, inténtalo de nuevo.',
+                });
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al actualizar el estado del arriendo. Por favor, inténtalo de nuevo.',
+            });
+        }
+    });
+}
+</script>
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error...',
+        text: "{{message}}",
+    })
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}

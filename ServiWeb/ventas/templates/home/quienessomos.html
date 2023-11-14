@@ -1,0 +1,87 @@
+{% extends "home/home.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<style>
+    header {
+        margin-top: 10px; 
+    }
+    .logo-container {
+      background-color: #262491;
+      padding: 10px;
+      display: flex; 
+      align-items: center; 
+      width: 100%;
+    }
+  
+    .logo-container img {
+      max-width: 200px; 
+      height: auto;
+      margin-right: 20px; 
+    }
+  
+    .logo-container h1 {
+      font-size: 24px;
+      color: #ffffff;
+      margin: 0;
+    }
+  
+    .logo-container h2 {
+      font-size: 16px;
+      color: #ffffff;
+      margin: 0;
+    }
+  
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  
+    .container > div {
+      text-align: center;
+      max-width: 300px;
+    }
+  
+    .container img {
+      max-width: 100%;
+      height: auto;
+    }
+</style>
+
+<header>
+   
+        <div class="logo-container">
+            <img src="{% static 'imagenes/logo.png' %}" alt="Logo de la Empresa" width="200px">
+            <h1>Somos Servirent Ltda: Nos preocupamos de nuestros clientes para poder darles la mejor atención con las mejores herramientas del mercado.</h1>
+        </div>
+
+    <br><br>
+    <section class="container">
+        <div class="mission">
+            <img src="{% static 'imagenes/mision.png' %}" alt="Imagen de Misión">
+            <h1>Misión</h1>
+            <p>Lo que nos mueve, propósito o razón de ser de nuestra empresa.</p>
+            <p>"Dar lo mejor de nosotros para entregar soluciones a nuestros clientes, innovando y desarrollando una compañía de arriendo sostenible".</p>
+        </div>
+        <div class="vision">
+            <img src="{% static 'imagenes/vision.png' %}" alt="Imagen de Visión">
+            <h1>Visión</h1>
+            <p>Hacia dónde nos dirigimos en el largo plazo.</p>
+            <p>"Ser reconocida como la mejor empresa de Arriendo de equipos y maquinarias en Latinoamérica".</p>
+        </div>
+        <div class="values">
+            <img src="{% static 'imagenes/valores.png' %}" alt="Imagen de Valores">
+            <h1>Valores</h1>
+            <p>Respetamos a todas las personas, comunidades y entidades que se relacionan con nuestro negocio, y declaramos como valores:</p>
+            <ul>
+                <li>Integridad</li>
+                <li>Respeto</li>
+                <li>Excelencia</li>
+            </ul>
+        </div>
+    </section>
+</header>    
+{% endblock %}

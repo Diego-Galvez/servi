@@ -1,0 +1,36 @@
+
+#info {
+    background: rgb(6, 3, 43);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-family: Cambria;
+}
+
+#info .contenedor {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.info-productos a > img {
+    width: 180px;
+    height: 180px;
+    border: solid 7px rgb(0, 0, 0);
+    object-fit: cover;
+    border-radius: 30%;
+    transition: all 0.5s;
+}
+
+.info-productos > a > img:hover {
+    border-radius: 0;
+    transform: scale(1.1);
+}
+
+.info-productos > a > img:active {
+    border-radius:50%;
+}
+
+.info-productos {
+    margin: 20px;
+}
